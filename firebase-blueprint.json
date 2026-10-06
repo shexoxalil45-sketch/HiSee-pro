@@ -1,0 +1,215 @@
+{
+  "entities": {
+    "Video": {
+      "title": "Video",
+      "description": "A video uploaded by a user.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the video" },
+        "url": { "type": "string", "description": "The URL of the video" },
+        "authorUid": { "type": "string", "description": "The UID of the user who uploaded the video" },
+        "createdAt": { "type": "timestamp", "description": "The time the video was uploaded" },
+        "target": { "type": "string", "enum": ["feed", "story", "both"], "description": "Where the video should be displayed" },
+        "visibility": { "type": "string", "enum": ["public", "friends", "private"], "description": "Who can see the video" },
+        "stars": { "type": "number", "description": "Total stars received" },
+        "starredBy": { "type": "array", "items": { "type": "string" }, "description": "UIDs of users who gave stars" }
+      },
+      "required": ["title", "url", "authorUid", "createdAt", "target", "visibility"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user profile.",
+      "type": "object",
+      "properties": {
+        "nickname": { "type": "string", "description": "The nickname of the user" },
+        "bio": { "type": "string", "description": "The bio of the user" },
+        "avatarUrl": { "type": "string", "description": "The avatar URL of the user" },
+        "createdAt": { "type": "timestamp", "description": "The time the user was created" },
+        "isLive": { "type": "boolean", "description": "Whether the user is currently live" },
+        "liveSessionId": { "type": "string", "description": "The ID of the current live session" },
+        "isOnline": { "type": "boolean", "description": "Whether the user is currently online" },
+        "freeStars": { "type": "number", "description": "Free stars balance" },
+        "paidStars": { "type": "number", "description": "Paid stars balance" },
+        "supporterXP": { "type": "number", "description": "Cumulative supporter experience points" },
+        "xp": { "type": "number", "description": "Experience points for level" },
+        "realEarningsUSD": { "type": "number", "description": "Actual cash earnings in USD" }
+      },
+      "required": ["nickname", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "A chat session between users.",
+      "type": "object",
+      "properties": {
+        "lastMessage": { "type": "string", "description": "The last message sent in the chat" },
+        "timestamp": { "type": "string", "description": "The time of the last message" },
+        "updatedAt": { "type": "timestamp", "description": "The time the chat was last updated" },
+        "participants": { "type": "array", "items": { "type": "string" }, "description": "The UIDs of the participants" },
+        "isGroup": { "type": "boolean", "description": "Whether the chat is a group chat" },
+        "isTyping": { "type": "object", "description": "Map of user IDs to typing status" },
+        "isRecording": { "type": "object", "description": "Map of user IDs to recording status" }
+      },
+      "required": ["lastMessage", "updatedAt", "participants"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A notification for a user.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "description": "The type of notification (e.g., 'message')" },
+        "fromUserId": { "type": "string", "description": "The UID of the user who triggered the notification" },
+        "fromUserName": { "type": "string", "description": "The name of the user who triggered the notification" },
+        "text": { "type": "string", "description": "The text of the notification" },
+        "createdAt": { "type": "timestamp", "description": "The time the notification was created" },
+        "chatId": { "type": "string", "description": "The ID of the chat related to the notification" }
+      },
+      "required": ["type", "fromUserId", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A message in a chat.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "senderId": { "type": "string" },
+        "createdAt": { "type": "timestamp" },
+        "type": { "type": "string", "enum": ["text", "image", "audio", "video", "file"] },
+        "fileUrl": { "type": "string" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["senderId", "createdAt", "type"]
+    },
+    "Call": {
+      "title": "Call",
+      "description": "A WebRTC call session.",
+      "type": "object",
+      "properties": {
+        "callerId": { "type": "string" },
+        "calleeId": { "type": "string" },
+        "type": { "type": "string", "enum": ["audio", "video"] },
+        "status": { "type": "string", "enum": ["calling", "ongoing", "ended", "missed"] },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["callerId", "calleeId", "type", "status", "createdAt"]
+    },
+    "FriendRequest": {
+      "title": "FriendRequest",
+      "description": "A request to be friends.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "rejected"] },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["senderId", "receiverId", "status", "createdAt"]
+    },
+    "Friend": {
+      "title": "Friend",
+      "description": "A friendship relationship.",
+      "type": "object",
+      "properties": {
+        "users": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["users", "createdAt"]
+    },
+    "LiveRoom": {
+      "title": "LiveRoom",
+      "description": "A live streaming room.",
+      "type": "object",
+      "properties": {
+        "hostId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "ended"] },
+        "viewerCount": { "type": "number" },
+        "activeHosts": { "type": "array", "items": { "type": "string" }, "description": "UIDs of hosts and co-hosts currently in the stream" },
+        "stars": { "type": "number", "description": "Total stars received in this room" },
+        "starredBy": { "type": "array", "items": { "type": "string" }, "description": "UIDs of users who gave stars in this room" },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["hostId", "title", "status", "createdAt"]
+    },
+    "Gift": {
+      "title": "Gift",
+      "description": "A gift sent during a live stream.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "roomId": { "type": "string" },
+        "type": { "type": "string" },
+        "amount": { "type": "number" },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["senderId", "receiverId", "roomId", "type", "amount", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A comment on a video.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userAvatar": { "type": "string" },
+        "text": { "type": "string" },
+        "likes": { "type": "number" },
+        "timestamp": { "type": "timestamp" },
+        "type": { "type": "string", "enum": ["text", "sticker", "gift"] }
+      },
+      "required": ["userId", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/videos/{videoId}": {
+      "schema": "Video",
+      "description": "Collection of videos"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of users"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Collection of chats"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Subcollection of messages in a chat"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Subcollection of notifications for a user"
+    },
+    "/calls/{callId}": {
+      "schema": "Call",
+      "description": "Collection of calls"
+    },
+    "/friendRequests/{requestId}": {
+      "schema": "FriendRequest",
+      "description": "Collection of friend requests"
+    },
+    "/friends/{friendId}": {
+      "schema": "Friend",
+      "description": "Collection of friends"
+    },
+    "/live_rooms/{roomId}": {
+      "schema": "LiveRoom",
+      "description": "Collection of live rooms"
+    },
+    "/gifts/{giftId}": {
+      "schema": "Gift",
+      "description": "Collection of gifts"
+    },
+    "/videos/{videoId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Subcollection of comments for a video"
+    },
+    "/guest_lives/{hostId}": {
+      "description": "Multi-guest live stream settings and seats"
+    },
+    "/guest_lives/{hostId}/requests/{requestId}": {
+      "description": "Join requests for multi-guest live streams"
+    }
+  }
+}

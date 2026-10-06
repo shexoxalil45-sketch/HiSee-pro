@@ -1,0 +1,13 @@
+{
+  "name": "HiSee Pro",
+  "description": "HiSee Pro - Version 13: Connect, Share & Stream Moments",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation",
+    "display-capture"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
